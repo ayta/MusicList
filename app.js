@@ -20,6 +20,11 @@ const expressSession = require('express-session')({
   saveUninitialized: false,
 });
 
+const webpack = require('webpack');
+const webpackConfig = require('./webpack.config');
+const webpackDevMiddleware = require('webpack-dev-middleware');
+const webpackHotMiddleware = require('webpack-hot-middleware');
+
 const app = express();
 
 // Connect Mongoose
@@ -29,7 +34,7 @@ mongoose.connect('mongodb://localhost/musiclist');
 app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'ejs');
 // uncomment after placing your favicon in /public
-app.use(favicon(path.join(__dirname, 'public', 'favicon.ico')));
+// app.use(favicon(path.join(__dirname, 'public', 'favicon.ico')));
 
 app.use(logger('dev'));
 app.use(bodyParser.json());
@@ -38,12 +43,26 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(expressSession);
-
 app.use(express.static(path.join(__dirname, 'public')));
 
-app.use('/', index);
+// Webpack Server
+const webpackCompiler = webpack(webpackConfig);
+app.use(webpackDevMiddleware(webpackCompiler, {
+  publicPath: webpackConfig.output.publicPath,
+  stats: {
+    colors: true,
+    chunks: true,
+    'errors-only': true,
+  },
+}));
+app.use(webpackHotMiddleware(webpackCompiler, {
+  log: console.log,
+}));
 app.use('/api', api);
 app.use('/api/users', users);
+app.use('/*', index);
+
+
 
 // Configure Passport
 passport.use(new LocalStrategy(User.authenticate()));
