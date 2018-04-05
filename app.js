@@ -1,6 +1,6 @@
-const express = require('express');
+require('babel-register');
 const path = require('path');
-const favicon = require('serve-favicon');
+// const favicon = require('serve-favicon');
 const cookieParser = require('cookie-parser');
 const bodyParser = require('body-parser');
 const mongoose = require('mongoose');
@@ -13,6 +13,7 @@ const User = require('./models/user');
 const index = require('./routes/index');
 const api = require('./routes/api/index');
 const users = require('./routes/api/users');
+const express = require('express');
 // const expressSession = require('express-session');
 const expressSession = require('express-session')({
   secret: 'any random string can go here',
@@ -21,9 +22,10 @@ const expressSession = require('express-session')({
 });
 
 const webpack = require('webpack');
-const webpackConfig = require('./webpack.config');
+const webpackConfig = require('./webpack.config.babel');
 const webpackDevMiddleware = require('webpack-dev-middleware');
 const webpackHotMiddleware = require('webpack-hot-middleware');
+const authentication = require('./routes/api/authentication');
 
 const app = express();
 
@@ -47,22 +49,28 @@ app.use(express.static(path.join(__dirname, 'public')));
 
 // Webpack Server
 const webpackCompiler = webpack(webpackConfig);
-app.use(webpackDevMiddleware(webpackCompiler, {
-  publicPath: webpackConfig.output.publicPath,
-  stats: {
-    colors: true,
-    chunks: true,
-    'errors-only': true,
-  },
-}));
+if (process.env.NODE_ENV !== 'production') {
+  // const webpackCompiler = webpack(webpackConfig);
+  app.use(webpackDevMiddleware(webpackCompiler, {
+    publicPath: webpackConfig.output.publicPath,
+    stats: {
+      colors: true,
+      chunks: true,
+      'errors-only': true,
+    },
+  }));
+  app.use(webpackHotMiddleware(webpackCompiler, {
+    log: console.log,
+  }));
+}
+
 app.use(webpackHotMiddleware(webpackCompiler, {
   log: console.log,
 }));
 app.use('/api', api);
 app.use('/api/users', users);
+app.use('/api/authentication', authentication);
 app.use('/*', index);
-
-
 
 // Configure Passport
 passport.use(new LocalStrategy(User.authenticate()));
