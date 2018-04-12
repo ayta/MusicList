@@ -10,6 +10,7 @@
     "build-prod": "SET NODE_ENV=production&&webpack -p --config webpack.config.babel.js"
   },
   "dependencies": {
+    "availity-reactstrap-validation": "^2.0.2",
     "babel-core": "^6.26.0",
     "babel-jest": "^22.4.3",
     "babel-loader": "^7.1.4",
@@ -27,6 +28,7 @@
     "express-session": "^1.15.6",
     "extract-text-webpack-plugin": "^4.0.0-beta.0",
     "http-errors": "~1.6.2",
+    "mailgun-js": "^0.16.0",
     "mongoose": "^5.0.12",
     "morgan": "~1.9.0",
     "node-sass": "^4.8.3",
@@ -42,6 +44,7 @@
     "reactstrap": "^5.0.0",
     "redux": "^3.7.2",
     "redux-devtools": "^3.4.1",
+    "redux-thunk": "^2.2.0",
     "sass-loader": "^6.0.7",
     "serve-favicon": "^2.5.0",
     "style-loader": "^0.20.3",

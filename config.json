@@ -6,7 +6,7 @@
     "secret": "bmoe5r8hb98fhsbso93ikdfgbs0u4sfg89dhsogsd09fy4pf9fdh"
   },
   "mailgun": {
-    "apiKey": "key-a6831fad9c681569479ab46734f662a8",
-    "domain": "sandboxfa58bac976052d5e93f1cfa0b54c5337.mailgun.org"
+    "apiKey": "key-a7d139042be0df18b7df2245c71a4aa5",
+    "domain": "sandboxec47763b0d484c4aaf626d74ae39120f.mailgun.org"
   }
 }
