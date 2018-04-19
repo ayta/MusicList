@@ -51,7 +51,6 @@ export function createHash(email) {
 
     // turn on spinner
     dispatch(incrementProgress());
-
     // contact the API
     await fetch(
       // where to contact
@@ -76,6 +75,7 @@ export function createHash(email) {
       }
       return dispatch(passwordResetHashFailure(new Error('Something went wrong. Please try again.')));
     }).catch(error => dispatch(passwordResetHashFailure(error)));
+
     // turn off spinner
     return dispatch(decrementProgress());
   };
@@ -83,10 +83,12 @@ export function createHash(email) {
 // Log User In
 export function logUserIn(userData) {
   return async (dispatch) => {
-    // turn on spinner
-    dispatch(incrementProgress());
     // clear the error box if it's displayed
     dispatch(clearError());
+
+    // turn on spinner
+    dispatch(incrementProgress());
+
     // register that a login attempt is being made
     dispatch(loginAttempt());
 

@@ -34,7 +34,6 @@ router.post('/login', async (req, res) => {
   // look up the user by their email
   const query = User.findOne({ email: req.body.email });
   const foundUser = await query.exec();
-
   // if they exist, they'll have a username, so add that to our body
   if (foundUser) { req.body.username = foundUser.username; }
   passport.authenticate('local')(req, res, () => {
@@ -82,6 +81,7 @@ router.post('/register', async (req, res) => {
       });
     });
   }
+
   // return an error if all else fails
   return res.send(JSON.stringify({ error: 'There was an error registering the user' }));
 });
@@ -97,33 +97,30 @@ router.post('/saveresethash', async (req, res) => {
     // If the user exists, save their password hash
     const timeInMs = Date.now();
     const hashString = `${req.body.email}${timeInMs}`;
-    const secret = appConfig.crypto.secret;
+    const { secret } = appConfig.crypto.secret;
     const hash = crypto.createHmac('sha256', secret)
       .update(hashString)
       .digest('hex');
     foundUser.passwordReset = hash;
 
-    // Put together the email
-    const emailData = {
-      from: appConfig.mailgun.domain,
-      to: foundUser.email,
-      subject: 'Reset Your Password',
-      text: `A password reset has been requested for the MusicList account connected to this email address. If you made this request, please click the following link: https://musiclist.com/account/change-password/${foundUser.passwordReset} ... if you didn't make this request, feel free to ignore it!`,
-      html: `<p>A password reset has been requested for the MusicList account connected to this email address. If you made this request, please click the following link: <a href="https://musiclist.com/account/change-password/${foundUser.passwordReset}&quot; target="_blank">https://musiclist.com/account/change-password/${foundUser.passwordReset}</a>.</p><p>If you didn't make this request, feel free to ignore it!</p>`,
-    };
-
-    // Send it
-    mailgun.messages().send(emailData, (error, body) => {
-      if (error || !body) {
-        result = res.send(JSON.stringify({ error: 'Something went wrong while attempting to send the email. Please try again.' }));
-      } else {
-        result = res.send(JSON.stringify({ success: true }));
-      }
-    });
-
     foundUser.save((err) => {
+      // Put together the email
+      const emailData = {
+        from: `CreditLogy <postmaster@${appConfig.mailgun.domain}>`,
+        to: foundUser.email,
+        subject: 'Reset Your Password',
+        text: `A password reset has been requested for the CreditLogy account connected to this email address. If you made this request, please click the following link: localhost:3000/account/change-password/${foundUser.passwordReset} ... if you didn't make this request, feel free to ignore it!`,
+        html: `<p>A password reset has been requested for the CreditLogy account connected to this email address. If you made this request, please click the following link: <a href="localhost:3000/account/change-password/${foundUser.passwordReset}&quot; target="_blank">https://musiclist.com/account/change-password/${foundUser.passwordReset}</a>.</p><p>If you didn't make this request, feel free to ignore it!</p>`,
+      };
+      // Send it
+      mailgun.messages().send(emailData, (error, body) => {
+        if (error || !body) {
+          result = res.send(JSON.stringify({ error: 'Something went wrong while attempting to send the email. Please try again.' }));
+        } else {
+          result = res.send(JSON.stringify({ success: true }));
+        }
+      });
       if (err) { result = res.send(JSON.stringify({ error: 'Something went wrong while attempting to reset your password. Please Try again' })); }
-      result = res.send(JSON.stringify({ success: true }));
     });
   } catch (err) {
     // if the user doesn't exist, error out

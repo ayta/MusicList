@@ -1,6 +1,6 @@
 import React from 'react';
 import { connect } from 'react-redux';
-import { createHash, passwordResetClear} from '../../actions/authentication';
+import { createHash, passwordResetClear } from '../../actions/authentication';
 
 import ResetPasswordPage from './ResetPasswordPage';
 
@@ -36,6 +36,5 @@ export class ResetPasswordPageContainer extends React.Component {
 }
 
 const mapStateToProps = state => ({ authentication: state.authentication });
-
 
 export default connect(mapStateToProps)(ResetPasswordPageContainer);

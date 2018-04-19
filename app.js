@@ -6,10 +6,10 @@ const cookieParser = require('cookie-parser');
 const express = require('express');
 const expressSession = require('express-session');
 // const favicon = require('serve-favicon');
-// const LocalStrategy = require('passport-local').Strategy;
 const logger = require('morgan');
 const mongoose = require('mongoose');
 const passport = require('passport');
+const LocalStrategy = require('passport-local').Strategy;
 const path = require('path');
 // const RateLimit = require('express-rate-limit');
 const webpack = require('webpack');
@@ -20,17 +20,18 @@ const webpackHotMiddleware = require('webpack-hot-middleware');
 const User = require('./models/user');
 
 // Route Files
-const api = require('./routes/api/index');
 // const albums = require('./routes/api/albums');
 // const artists = require('./routes/api/artists');
 const authentication = require('./routes/api/authentication');
 const index = require('./routes/index');
 const users = require('./routes/api/users');
+const api = require('./routes/api/index');
 
 const app = express();
 
 // Connect to Mongoose
 // mongoose.connect(`mongodb://${appConfig.mongodb.user}:${appConfig.mongodb.password}@localhost/musiclist?authSource=admin`, { useMongoClient: true });
+mongoose.connect('mongodb://localhost/musiclist');
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'ejs');
@@ -47,8 +48,8 @@ const sessionValues = {
   cookie: {},
   name: 'sessionId',
   resave: false,
-  saveUninitialized: true,
-  secret: appConfig.expressSession.secret,
+  saveUninitialized: false,
+  secret: 'any random string can go here',
 };
 if (app.get('env') === 'production') {
   app.set('trust proxy', 1);
@@ -84,15 +85,15 @@ if (process.env.NODE_ENV !== 'production') {
 });
 app.use('/api/', apiLimiter); */
 
-app.use('/api', api);
 // app.use('/api/albums', albums);
 // app.use('/api/artists', artists);
 app.use('/api/authentication', authentication);
 app.use('/api/users', users);
-app.use('/*', index);
+app.use('/', index);
+app.use('/api', api);
 
 // Configure Passport
-// passport.use(new LocalStrategy(User.authenticate()));
+passport.use(new LocalStrategy(User.authenticate()));
 passport.serializeUser(User.serializeUser());
 passport.deserializeUser(User.deserializeUser());
 
