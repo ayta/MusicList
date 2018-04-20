@@ -89,8 +89,8 @@ app.use('/api/', apiLimiter); */
 // app.use('/api/artists', artists);
 app.use('/api/authentication', authentication);
 app.use('/api/users', users);
-app.use('/', index);
 app.use('/api', api);
+app.use('/*', index);
 
 // Configure Passport
 passport.use(new LocalStrategy(User.authenticate()));

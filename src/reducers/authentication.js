@@ -49,11 +49,6 @@ export default function reducer(state = initialState, action) {
       newState.registrationSucceeded = false;
       return newState;
     }
-    case 'AUTHENTICATION_PASSWORD_RESET_HASH_CREATED': {
-      const newState = Object.assign({}, state);
-      newState.isPasswordReset = true;
-      return newState;
-    }
     case 'AUTHENTICATION_PASSWORD_SAVE_CLEAR': {
       const newState = Object.assign({}, state);
       newState.isPasswordChanged = false;
@@ -62,6 +57,11 @@ export default function reducer(state = initialState, action) {
     case 'AUTHENTICATION_PASSWORD_SAVE_SUCCESS': {
       const newState = Object.assign({}, state);
       newState.isPasswordChanged = true;
+      return newState;
+    }
+    case 'AUTHENTICATION_PASSWORD_RESET_HASH_CREATED': {
+      const newState = Object.assign({}, state);
+      newState.isPasswordReset = true;
       return newState;
     }
     case 'AUTHENTICATION_REGISTRATION_SUCCESS': {
