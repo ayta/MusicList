@@ -25,6 +25,10 @@ router.get('/checksession', (req, res) => {
 
 // GET to /logout
 router.get('/logout', (req, res) => {
+  const sess = req.session;
+  if (sess.user) {
+    sess.user = null;
+  }
   req.logout();
   return res.send(JSON.stringify(req.user));
 });
@@ -155,7 +159,7 @@ router.post('/saveresethash', async (req, res) => {
           result = res.send(JSON.stringify({ success: true }));
         }
       });
-      if (err) { result = res.send(JSON.stringify({ error: 'Something went wrong while attempting to reset your password. Please Try again' })); }
+      if (err) { result = res.send(JSON.stringify({ error: 'Something went wrong while attempting to reset your password by mailgun. Please Try again' })); }
     });
   } catch (err) {
     // if the user doesn't exist, error out

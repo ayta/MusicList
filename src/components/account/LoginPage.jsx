@@ -77,7 +77,6 @@ export default class LoginPage extends React.Component {
               />
               <AvFeedback>Password is required to log in</AvFeedback>
               <span><Link to="/account/reset-password">Forgot your password?</Link></span>
-              <span><Link to="/account/change-password/a87347d9e88ad4368703ce8c6db202e15ec36b8eb491ed430df54991ac7f1abc">Change password?</Link></span>
             </AvGroup>
             <Button color="primary">Log In</Button>
           </AvForm>

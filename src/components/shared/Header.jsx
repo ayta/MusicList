@@ -46,8 +46,8 @@ export default class Header extends React.Component {
     const { isLoggedIn, firstName } = this.props.authentication;
     return (
       <header className="wrapper">
-        <Navbar color="faded" light toggleable>
-          <NavbarToggler right onClick={this.toggleNavbar} />
+        <Navbar color="faded" light expand>
+          <NavbarToggler right="true" onClick={this.toggleNavbar} />
           <NavbarBrand tag={Link} to="/">MusicList</NavbarBrand>
           <Collapse isOpen={this.state.isOpen} navbar>
             { isLoggedIn ? this.renderGreeting(firstName) : renderLogin() }
